@@ -69,12 +69,18 @@
     font-size: 16px;
 }
 
-.elementoLista{
+.elementoLista {
     display: flex;
     flex-direction: row;
     size: 2rem;
 }
 
-.botao_deletar{
+.botao_deletar {
     margin-left: 1rem;
+}
+
+.mensagemErro {
+    color: red;
+    font-size: 16px;
+    margin-top: 8px;
 }

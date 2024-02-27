@@ -17,6 +17,12 @@ class LembreteSistema extends Component{
     criarLembrete = (nome, data) => {
         const dataInformada = new Date(data);
         const dataAtual = new Date();
+
+        if (!nome || !data) {
+            this.setState({ mensagemErro: "Erro! O nome e a data são obrigatórios!" });
+            return;
+        }
+
         if (dataInformada <= dataAtual) {
             console.log("Data inválida"); 
             this.setState({ mensagemErro: "Erro! A data informada deve estar no futuro!" });
