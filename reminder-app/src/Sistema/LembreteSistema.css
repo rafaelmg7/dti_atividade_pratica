@@ -44,11 +44,6 @@
 
 .botao {
     margin-top: 16px;
-    background-color: #0000ff;
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    border-radius: 4px;
 }
 
 .botao:hover {

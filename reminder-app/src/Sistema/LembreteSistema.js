@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import moment from "moment";
 import Lembrete from "./Lembrete";
-import CloseButton from 'react-bootstrap/CloseButton'
+import { Button, CloseButton } from "react-bootstrap";
 import "./LembreteSistema.css";
 
 class LembreteSistema extends Component{
@@ -136,7 +136,7 @@ class LembreteSistema extends Component{
                                     />
                                 </label>
                             </div>
-                            <button className="botao" type="submit">Criar</button>
+                            <Button className="botao" variant="primary" size="lg" type="submit">Criar</Button>
                         </form>
                         {this.state.mensagemErro && <div className="mensagemErro">{this.state.mensagemErro}</div>}
                         <div className="listaLembretes">
