@@ -1,5 +1,5 @@
 import React from "react";
-import LembreteSistema from "./LembreteSistema";
+import LembreteSistema from "./Sistema/LembreteSistema";
 
 function App() {
     return (

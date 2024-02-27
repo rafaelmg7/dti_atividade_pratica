@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Lembrete from "./Lembrete";
+import "./LembreteSistema.css";
 
 class LembreteSistema extends Component{
     constructor(props){
@@ -78,32 +79,55 @@ class LembreteSistema extends Component{
         console.log("Lembretes Ordenados: ", lembretesOrdenados);
         return(
             <div>
-                <h2>Novo Lembrete</h2>
-                <form onSubmit={this.handleSubmit}>
-                    <label>
-                        Nome:
-                        <input type="text" name="nome" />
-                    </label>
-                    <label>
-                        Data:
-                        <input type="date" name="data" />
-                    </label>
-                    <button type="submit">Criar</button>
-                </form>
-                <h2>Lista de lembretes</h2>
-                <p></p>
-                {lembretesOrdenados.map((lembreteData, index) => {;
-                    return (
-                        <div key={index}>
-                            <p>{this.formataData(lembreteData.data)}</p>
-                            <ul>
-                                {lembreteData.lembretes.map((lembrete, idx) => (
-                                    <li key={idx}>{lembrete.nome}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    );
-                })}
+                <div className="base">
+                    <div className="lembreteSistema">
+                        <img src="/imagens/reminder.png" alt="remind" />
+                        <h2>Novo Lembrete</h2>
+                        <form className="inputs" onSubmit={this.handleSubmit}>
+                            <div>
+                                <label>
+                                    <strong className="textoNome">
+                                        Nome:
+                                    </strong>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Nome do lembrete"
+                                        name="nome"
+                                        className="nome" 
+                                    />
+                                </label>
+                            </div>
+                            <div>
+                                <label>
+                                    <strong className="textoData">
+                                        Data:
+                                    </strong>
+                                    <input 
+                                        type="date" 
+                                        placeholder="Data do lembrete (no formato dd/mm/aaaa)"
+                                        name="data" 
+                                        className="data"
+                                    />
+                                </label>
+                            </div>
+                            <button className="botao" type="submit">Criar</button>
+                        </form>
+                        <h2>Lista de lembretes</h2>
+                        <p></p>
+                        {lembretesOrdenados.map((lembreteData, index) => {;
+                            return (
+                                <div key={index}>
+                                    <p>{this.formataData(lembreteData.data)}</p>
+                                    <ul>
+                                        {lembreteData.lembretes.map((lembrete, idx) => (
+                                            <li key={idx}>{lembrete.nome}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
             </div>
         );
     };
