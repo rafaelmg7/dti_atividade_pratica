@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import moment from "moment";
 import Lembrete from "./Lembrete";
+import CloseButton from 'react-bootstrap/CloseButton'
 import "./LembreteSistema.css";
 
 class LembreteSistema extends Component{
@@ -17,7 +18,7 @@ class LembreteSistema extends Component{
         const dataInformada = new Date(data);
         const dataAtual = new Date();
         if (dataInformada <= dataAtual) {
-            console.log("Data inválida");
+            console.log("Data inválida"); 
             this.setState({ mensagemErro: "Erro! A data informada deve estar no futuro!" });
             return;
         } else {
@@ -33,7 +34,7 @@ class LembreteSistema extends Component{
                     const lembreteExistente = lembretes[dataFormatada].find(lembrete => lembrete.nome === nome);
                     if (lembreteExistente) {
                         console.log("Lembrete já existe");
-                        this.setState({ mensagemErro: "Erro! Já existe um lembrete com este nome para a data informada!" });
+                        // this.setState({ mensagemErro: "Erro! Já existe um lembrete com este nome para a data informada!" });
                         return;
                     }
                     let id = 0;
@@ -54,13 +55,17 @@ class LembreteSistema extends Component{
     };
 
     deletaLembrete = (nome, data) => {
-        const dataFormatada = data.toLocaleDateString();
+        // const dataFormatada = data.toISOString().split('T')[0];
+        const dataFormatada = data;
         this.setState(prevState => {
             const lembretes = { ...prevState.lembretes };
-            if(lembretes[dataFormatada]){
+            if(dataFormatada in lembretes){
                 lembretes[dataFormatada] = lembretes[dataFormatada].filter(
                     lembrete => lembrete.nome !== nome
                 );
+                if(lembretes[dataFormatada].length === 0){
+                    delete lembretes[dataFormatada];
+                }
             }
             return { lembretes };
         });
@@ -144,7 +149,10 @@ class LembreteSistema extends Component{
                                     <p className="dataLista">{this.formataData(lembreteData.data)}</p>
                                     <ul>
                                         {lembreteData.lembretes.map((lembrete, idx) => (
+                                        <div className="elementoLista"> 
                                             <li key={idx} className="nomeLista">{lembrete.nome}</li>
+                                            <CloseButton className="botao_deletar" onClick={() => this.deletaLembrete(lembrete.nome, lembreteData.data)} />
+                                        </div>
                                         ))}
                                     </ul>
                                 </div>

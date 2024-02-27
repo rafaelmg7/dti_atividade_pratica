@@ -73,3 +73,13 @@
 .nomeLista {
     font-size: 16px;
 }
+
+.elementoLista{
+    display: flex;
+    flex-direction: row;
+    size: 2rem;
+}
+
+.botao_deletar{
+    margin-left: 1rem;
+}
