@@ -13,24 +13,26 @@ class LembreteSistema extends Component{
     criarLembrete = (nome, data) => {
         const dataFormatada = data.toISOString().split('T')[0];
         const existeLembretes = this.state.lembretes[dataFormatada] || [];
-        const estaDuplicado = existeLembretes.some(reminder => reminder.nome === nome);
-    
+        const estaDuplicado = existeLembretes.some(reminder => reminder.nome === nome && reminder.data === dataFormatada);
+      
         if (!estaDuplicado) {
-            const novoLembrete = new Lembrete(nome, data);
-            this.setState(prevState => {
-                const lembretes = { ...prevState.lembretes };
-                if (lembretes[dataFormatada]) {
-                    lembretes[dataFormatada].push(novoLembrete);
-                } else {
-                    lembretes[dataFormatada] = [novoLembrete];
-                }
-                return { lembretes };
-            });
+          const novoLembrete = new Lembrete(nome, data);
+          this.setState(prevState => {
+            const lembretes = { ...prevState.lembretes };
+            if (dataFormatada in lembretes) {
+              lembretes[dataFormatada].push(novoLembrete);
+              console.log("Lembrete adicionado: ", lembretes[dataFormatada]);
+            } else {
+              lembretes[dataFormatada] = [novoLembrete];
+              console.log("Lembrete criado: ", lembretes[dataFormatada]);
+            }
+            return { lembretes };
+          });
         } else {
-            console.log('Lembrete já existe');
+          console.log('Lembrete já existe');
         }
-    };    
-    
+    };
+
     deletaLembrete = (nome, data) => {
         const dataFormatada = data.toLocaleDateString();
         this.setState(prevState => {
