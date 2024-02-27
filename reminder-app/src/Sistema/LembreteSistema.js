@@ -15,7 +15,7 @@ class LembreteSistema extends Component{
     criarLembrete = (nome, data) => {
         const dataFormatada = data.toISOString().split('T')[0];
       
-        const novoLembrete = new Lembrete(nome, data);
+        const novoLembrete = new Lembrete(nome, dataFormatada);
         this.setState(prevState => {
             const lembretes = { ...prevState.lembretes };
             console.log("Lembrete antes de adicionar: ", lembretes);
