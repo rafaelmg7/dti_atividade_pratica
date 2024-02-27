@@ -8,37 +8,49 @@ class LembreteSistema extends Component{
         super(props);
         this.state = {
             lembretes: {},
+            mensagemErro: '',
         };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     criarLembrete = (nome, data) => {
-        const dataFormatada = data.toISOString().split('T')[0];
-      
-        const novoLembrete = new Lembrete(nome, dataFormatada);
-        this.setState(prevState => {
-            const lembretes = { ...prevState.lembretes };
-            console.log("Lembrete antes de adicionar: ", lembretes);
-            if (dataFormatada in lembretes) {
-                const lembreteExistente = lembretes[dataFormatada].find(lembrete => lembrete.nome === nome);
-                if (lembreteExistente) {
-                    console.log("Lembrete já existe");
-                    return;
+        const dataInformada = new Date(data);
+        const dataAtual = new Date();
+        if (dataInformada <= dataAtual) {
+            console.log("Data inválida");
+            this.setState({ mensagemErro: "Erro! A data informada deve estar no futuro!" });
+            return;
+        } else {
+            this.setState({ mensagemErro: "" });
+
+            const dataFormatada = data.toISOString().split('T')[0];
+            const novoLembrete = new Lembrete(nome, dataFormatada);
+
+            this.setState(prevState => {
+                const lembretes = { ...prevState.lembretes };
+                console.log("Lembrete antes de adicionar: ", lembretes);
+                if (dataFormatada in lembretes) {
+                    const lembreteExistente = lembretes[dataFormatada].find(lembrete => lembrete.nome === nome);
+                    if (lembreteExistente) {
+                        console.log("Lembrete já existe");
+                        this.setState({ mensagemErro: "Erro! Já existe um lembrete com este nome para a data informada!" });
+                        return;
+                    }
+                    let id = 0;
+                    lembretes[dataFormatada].forEach(lembrete => {
+                        id += 1;
+                    }); // incrementa o id a cada lembrete que esta na data
+                    novoLembrete.addId(id);
+                    lembretes[dataFormatada].push(novoLembrete);
+                    console.log("Lembrete adicionado: ", lembretes[dataFormatada]);
+                } else {
+                    novoLembrete.addId(0);
+                    lembretes[dataFormatada] = [novoLembrete];
+                    console.log("Lembrete criado: ", lembretes[dataFormatada]);
                 }
-                let id = 0;
-                lembretes[dataFormatada].forEach(lembrete => {
-                    id += 1;
-                }); // incrementa o id a cada lembrete que esta na data
-                novoLembrete.addId(id);
-                lembretes[dataFormatada].push(novoLembrete);
-                console.log("Lembrete adicionado: ", lembretes[dataFormatada]);
-            } else {
-                novoLembrete.addId(0);
-                lembretes[dataFormatada] = [novoLembrete];
-                console.log("Lembrete criado: ", lembretes[dataFormatada]);
-            }
-            return { lembretes };
-        });
+                return { lembretes };
+            });
+        }
     };
 
     deletaLembrete = (nome, data) => {
@@ -121,6 +133,7 @@ class LembreteSistema extends Component{
                             </div>
                             <button className="botao" type="submit">Criar</button>
                         </form>
+                        {this.state.mensagemErro && <div className="mensagemErro">{this.state.mensagemErro}</div>}
                         <div className="listaLembretes">
                         <h2>Lista de lembretes</h2>
                         </div>
