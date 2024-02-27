@@ -11,14 +11,12 @@ class LembreteSistema extends Component{
     }
 
     criarLembrete = (nome, data) => {
-        const dataCerta = new Date(data);
-        const dataFormatada = dataCerta.toLocaleDateString();
-
+        const dataFormatada = data.toISOString().split('T')[0];
         const existeLembretes = this.state.lembretes[dataFormatada] || [];
         const estaDuplicado = existeLembretes.some(reminder => reminder.nome === nome);
-
+    
         if (!estaDuplicado) {
-            const novoLembrete = new Lembrete(nome, dataCerta);
+            const novoLembrete = new Lembrete(nome, data);
             this.setState(prevState => {
                 const lembretes = { ...prevState.lembretes };
                 if (lembretes[dataFormatada]) {
@@ -31,8 +29,8 @@ class LembreteSistema extends Component{
         } else {
             console.log('Lembrete já existe');
         }
-    };
-
+    };    
+    
     deletaLembrete = (nome, data) => {
         const dataFormatada = data.toLocaleDateString();
         this.setState(prevState => {
@@ -47,7 +45,9 @@ class LembreteSistema extends Component{
     };
 
     ordenaDatas = () => {
-        const lembretesOrdenados = Object.keys(this.state.lembretes).sort();
+        const lembretesOrdenados = Object.keys(this.state.lembretes).sort(
+            (a,b) => new Date(a) - new Date(b)
+        );
         return lembretesOrdenados.map(data => ({
             data,
             lembretes: this.state.lembretes[data],
@@ -56,18 +56,27 @@ class LembreteSistema extends Component{
 
     handleSubmit(event) {
         event.preventDefault();
-        const form = event.target;
-        const nome = event.target.nome.value;
-        const data = new Date(form.elements.data.value);
+        const formData = new FormData(event.target);
+        const nome = formData.get('nome');
+        const dataValue = formData.get('data');
+        console.log("Data value:", dataValue);
+        const data = new Date(dataValue);
+        console.log("Parsed Date: ", data);
         this.criarLembrete(nome, data);
-        form.reset();
-    }
+        event.target.reset();
+    };
+
+    formataData(data) {
+        const [ano, mes, dia] = data.split('-');
+        return `${dia}/${mes}/${ano}`;
+    };
 
     render(){
         const lembretesOrdenados = this.ordenaDatas();
+        console.log("Lembretes Ordenados: ", lembretesOrdenados);
         return(
             <div>
-                <h2>Sistema de Lembretes</h2>
+                <h2>Novo Lembrete</h2>
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Nome:
@@ -77,18 +86,22 @@ class LembreteSistema extends Component{
                         Data:
                         <input type="date" name="data" />
                     </label>
-                    <button type="submit">Adicionar Lembrete</button>
+                    <button type="submit">Criar</button>
                 </form>
-                {lembretesOrdenados.map((lembreteData, index) => (
-                    <div key={index}>
-                        <h3>{lembreteData.data}</h3>
-                        <ul>
-                            {lembreteData.lembretes.map((lembrete, idx) => (
-                                <li key={idx}>{lembrete.nome}</li>
-                            ))}
-                        </ul>
-                    </div>
-                ))}
+                <h2>Lista de lembretes</h2>
+                <p></p>
+                {lembretesOrdenados.map((lembreteData, index) => {;
+                    return (
+                        <div key={index}>
+                            <p>{this.formataData(lembreteData.data)}</p>
+                            <ul>
+                                {lembreteData.lembretes.map((lembrete, idx) => (
+                                    <li key={idx}>{lembrete.nome}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    );
+                })}
             </div>
         );
     };
