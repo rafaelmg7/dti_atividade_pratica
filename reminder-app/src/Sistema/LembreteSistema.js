@@ -82,11 +82,11 @@ class LembreteSistema extends Component{
                 <div className="base">
                     <div className="lembreteSistema">
                         <img src="/imagens/reminder.png" alt="remind" />
-                        <h2>Novo Lembrete</h2>
+                        <h1>Novo Lembrete</h1>
                         <form className="inputs" onSubmit={this.handleSubmit}>
                             <div>
                                 <label>
-                                    <strong className="textoNome">
+                                    <strong className="inputsTitle">
                                         Nome:
                                     </strong>
                                     <input 
@@ -99,7 +99,7 @@ class LembreteSistema extends Component{
                             </div>
                             <div>
                                 <label>
-                                    <strong className="textoData">
+                                    <strong className="inputsTitle">
                                         Data:
                                     </strong>
                                     <input 
@@ -112,20 +112,23 @@ class LembreteSistema extends Component{
                             </div>
                             <button className="botao" type="submit">Criar</button>
                         </form>
+                        <div className="listaLembretes">
                         <h2>Lista de lembretes</h2>
-                        <p></p>
+                        </div>
+                        <div className="lista">
                         {lembretesOrdenados.map((lembreteData, index) => {;
                             return (
                                 <div key={index}>
-                                    <p>{this.formataData(lembreteData.data)}</p>
+                                    <p className="dataLista">{this.formataData(lembreteData.data)}</p>
                                     <ul>
                                         {lembreteData.lembretes.map((lembrete, idx) => (
-                                            <li key={idx}>{lembrete.nome}</li>
+                                            <li key={idx} className="nomeLista">{lembrete.nome}</li>
                                         ))}
                                     </ul>
                                 </div>
                             );
                         })}
+                        </div>
                     </div>
                 </div>
             </div>
