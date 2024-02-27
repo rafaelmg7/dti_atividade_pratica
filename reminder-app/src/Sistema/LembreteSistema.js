@@ -15,13 +15,16 @@ class LembreteSistema extends Component{
     }
 
     criarLembrete = (nome, data) => {
-        const dataInformada = new Date(data);
-        const dataAtual = new Date();
-
         if (!nome || !data) {
             this.setState({ mensagemErro: "Erro! O nome e a data são obrigatórios!" });
             return;
-        }
+        } else if (!data) {
+            this.setState({ mensagemErro: "Erro! A data é obrigatória!" });
+            return;
+        } // TODO : precisa mudar a mensagem de erro para funcionar
+
+        const dataInformada = new Date(data);
+        const dataAtual = new Date();
 
         if (dataInformada <= dataAtual) {
             console.log("Data inválida"); 
