@@ -6,12 +6,19 @@ class Lembrete{
         this.data = data;
     };
 
+    addId(id) {
+        this.id = id;
+    };
+
     getNome(){
         return this.nome;
     };
     getData(){
         return this.data;
-    }
+    };
+    getId(){
+        return this.id;
+    };
 }
 
 export default Lembrete;

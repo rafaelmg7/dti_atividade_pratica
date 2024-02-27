@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import moment from "moment";
 import Lembrete from "./Lembrete";
 import "./LembreteSistema.css";
 
@@ -13,25 +14,31 @@ class LembreteSistema extends Component{
 
     criarLembrete = (nome, data) => {
         const dataFormatada = data.toISOString().split('T')[0];
-        const existeLembretes = this.state.lembretes[dataFormatada] || [];
-        const estaDuplicado = existeLembretes.some(reminder => reminder.nome === nome && reminder.data === dataFormatada);
       
-        if (!estaDuplicado) {
-          const novoLembrete = new Lembrete(nome, data);
-          this.setState(prevState => {
+        const novoLembrete = new Lembrete(nome, data);
+        this.setState(prevState => {
             const lembretes = { ...prevState.lembretes };
+            console.log("Lembrete antes de adicionar: ", lembretes);
             if (dataFormatada in lembretes) {
-              lembretes[dataFormatada].push(novoLembrete);
-              console.log("Lembrete adicionado: ", lembretes[dataFormatada]);
+                const lembreteExistente = lembretes[dataFormatada].find(lembrete => lembrete.nome === nome);
+                if (lembreteExistente) {
+                    console.log("Lembrete já existe");
+                    return;
+                }
+                let id = 0;
+                lembretes[dataFormatada].forEach(lembrete => {
+                    id += 1;
+                }); // incrementa o id a cada lembrete que esta na data
+                novoLembrete.addId(id);
+                lembretes[dataFormatada].push(novoLembrete);
+                console.log("Lembrete adicionado: ", lembretes[dataFormatada]);
             } else {
-              lembretes[dataFormatada] = [novoLembrete];
-              console.log("Lembrete criado: ", lembretes[dataFormatada]);
+                novoLembrete.addId(0);
+                lembretes[dataFormatada] = [novoLembrete];
+                console.log("Lembrete criado: ", lembretes[dataFormatada]);
             }
             return { lembretes };
-          });
-        } else {
-          console.log('Lembrete já existe');
-        }
+        });
     };
 
     deletaLembrete = (nome, data) => {
@@ -63,9 +70,11 @@ class LembreteSistema extends Component{
         const nome = formData.get('nome');
         const dataValue = formData.get('data');
         console.log("Data value:", dataValue);
-        const data = new Date(dataValue);
+        const data = moment(dataValue).utc();
+        const dataLocal = moment(data).local();
         console.log("Parsed Date: ", data);
-        this.criarLembrete(nome, data);
+        console.log("Local Date: ", dataLocal);
+        this.criarLembrete(nome, dataLocal);
         event.target.reset();
     };
 
