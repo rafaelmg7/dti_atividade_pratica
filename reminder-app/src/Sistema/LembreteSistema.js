@@ -15,52 +15,30 @@ class LembreteSistema extends Component{
     }
 
     criarLembrete = (nome, data) => {
-        if (!nome || !data) {
-            this.setState({ mensagemErro: "Erro! O nome e a data são obrigatórios!" });
-            return;
-        } else if (!data) {
-            this.setState({ mensagemErro: "Erro! A data é obrigatória!" });
-            return;
-        } // TODO : precisa mudar a mensagem de erro para funcionar
+        const dataFormatada = data.toISOString().split('T')[0];
+        const novoLembrete = new Lembrete(nome, dataFormatada);
 
-        const dataInformada = new Date(data);
-        const dataAtual = new Date();
-
-        if (dataInformada <= dataAtual) {
-            console.log("Data inválida"); 
-            this.setState({ mensagemErro: "Erro! A data informada deve estar no futuro!" });
-            return;
-        } else {
-            this.setState({ mensagemErro: "" });
-
-            const dataFormatada = data.toISOString().split('T')[0];
-            const novoLembrete = new Lembrete(nome, dataFormatada);
-
-            this.setState(prevState => {
-                const lembretes = { ...prevState.lembretes };
-                console.log("Lembrete antes de adicionar: ", lembretes);
-                if (dataFormatada in lembretes) {
-                    const lembreteExistente = lembretes[dataFormatada].find(lembrete => lembrete.nome === nome);
-                    if (lembreteExistente) {
-                        console.log("Lembrete já existe");
-                        // this.setState({ mensagemErro: "Erro! Já existe um lembrete com este nome para a data informada!" });
-                        return;
-                    }
-                    let id = 0;
-                    lembretes[dataFormatada].forEach(lembrete => {
-                        id += 1;
-                    }); // incrementa o id a cada lembrete que esta na data
-                    novoLembrete.addId(id);
-                    lembretes[dataFormatada].push(novoLembrete);
-                    console.log("Lembrete adicionado: ", lembretes[dataFormatada]);
-                } else {
-                    novoLembrete.addId(0);
-                    lembretes[dataFormatada] = [novoLembrete];
-                    console.log("Lembrete criado: ", lembretes[dataFormatada]);
+        this.setState(prevState => {
+            const lembretes = { ...prevState.lembretes };
+            if (dataFormatada in lembretes) {
+                const lembreteExistente = lembretes[dataFormatada].find(lembrete => lembrete.nome === nome);
+                if (lembreteExistente) {
+                    return { mensagemErro: "Erro! Já existe um lembrete com este nome para a data informada!" };
                 }
-                return { lembretes };
-            });
-        }
+                let id = 0;
+                lembretes[dataFormatada].forEach(lembrete => {
+                    id += 1;
+                }); // incrementa o id a cada lembrete que esta na data
+                novoLembrete.addId(id);
+                lembretes[dataFormatada].push(novoLembrete);
+            } else {
+                novoLembrete.addId(0);
+                lembretes[dataFormatada] = [novoLembrete];
+            }
+            return { lembretes: lembretes };
+        });
+        
+        // }
     };
 
     deletaLembrete = (nome, data) => {
@@ -90,17 +68,44 @@ class LembreteSistema extends Component{
         }));
     };
 
-    handleSubmit(event) {
+    validaFormulario = (nome, data) => {
+        if (!nome.trim() || !data.isValid()) {
+            this.setState({ mensagemErro: "Erro! O nome e a data são obrigatórios!" });
+            console.log("entrou aqui");
+            return false;
+        }
+
+        const dataInformada = new Date(data);
+        const dataAtual = new Date();
+
+        if (dataInformada <= dataAtual) {
+            console.log("Data inválida"); 
+            this.setState({ mensagemErro: "Erro! A data informada deve estar no futuro!" });
+            return false;
+        }
+
+        // Se chegou até aqui, o formulário é válido
+        this.setState({ mensagemErro: "" });
+        return true;
+    }
+
+    handleSubmit = (event) => {
         event.preventDefault();
+
         const formData = new FormData(event.target);
         const nome = formData.get('nome');
         const dataValue = formData.get('data');
+        console.log("Nome: ", nome);
         console.log("Data value:", dataValue);
         const data = moment(dataValue).utc();
         const dataLocal = moment(data).local();
         console.log("Parsed Date: ", data);
         console.log("Local Date: ", dataLocal);
-        this.criarLembrete(nome, dataLocal);
+
+        if(this.validaFormulario(nome, dataLocal)){
+            this.criarLembrete(nome, dataLocal);
+        }
+            
         event.target.reset();
     };
 
@@ -128,7 +133,8 @@ class LembreteSistema extends Component{
                                         type="text" 
                                         placeholder="Nome do lembrete"
                                         name="nome"
-                                        className="nome" 
+                                        className="nome"
+                                        // onChange={this.handleChange}
                                     />
                                 </label>
                             </div>
@@ -142,6 +148,7 @@ class LembreteSistema extends Component{
                                         placeholder="Data do lembrete (no formato dd/mm/aaaa)"
                                         name="data" 
                                         className="data"
+                                        // onChange={this.handleChange}
                                     />
                                 </label>
                             </div>
@@ -155,7 +162,7 @@ class LembreteSistema extends Component{
                         {lembretesOrdenados.map((lembreteData, index) => {;
                             return (
                                 <div key={index}>
-                                    <p className="dataLista">{this.formataData(lembreteData.data)}</p>
+                                    <p className="dataLista" key={index}>{this.formataData(lembreteData.data)}</p>
                                     <ul>
                                         {lembreteData.lembretes.map((lembrete, idx) => (
                                         <div className="elementoLista"> 
