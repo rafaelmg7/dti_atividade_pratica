@@ -1,0 +1,86 @@
+.base {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Roboto', sans-serif;
+}
+
+.lembreteSistema {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.inputsTitle {
+    width: 80px;
+    float: left;
+    margin-top: 8px;
+    font-size: 20px;
+}
+
+.nome {
+    margin-top: 8px;
+    background-color: #f0f0f0;
+    border-radius: 2px;
+}
+
+.data {
+    margin-top: 8px;
+    background-color: #f0f0f0;
+    border-radius: 2px;
+}
+
+.imagem {
+    margin: auto;
+}
+
+.botao {
+    margin-top: 16px;
+}
+
+.botao:hover {
+    background-color: #050565;
+}
+
+.listaLembretes {
+    margin: 20px;
+}
+
+.lista {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dataLista {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.nomeLista {
+    font-size: 16px;
+}
+
+.elementoLista {
+    display: flex;
+    flex-direction: row;
+    size: 2rem;
+}
+
+.botao_deletar {
+    margin-left: 1rem;
+}
+
+.mensagemErro {
+    color: red;
+    font-size: 16px;
+    margin-top: 8px;
+}
