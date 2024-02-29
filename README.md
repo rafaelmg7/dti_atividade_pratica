@@ -64,4 +64,4 @@ npm run build
 
 ## Contato
 
-Caso tenha alguma dúvida, sugestão ou encontre algum bug no sistema, sinta-se à vontade para nos contactar tanto no github ou através dos emails: [](), []() e [samuelsnviana@gmail.com](mailto:samuelviana@gmail.com).
+Caso tenha alguma dúvida, sugestão ou encontre algum bug no sistema, sinta-se à vontade para nos contactar tanto no github ou através dos emails: [](), [rafaelgomes.dev@gmail.com]() e [samuelsnviana@gmail.com](mailto:samuelviana@gmail.com).
