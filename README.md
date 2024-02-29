@@ -1,5 +1,5 @@
 # Reminder App: dti_atividade_pratica
-Repositório destinado ao armazenamento do sistema de criação de lembretes.
+Repositório destinado ao armazenamento do Sistema de Criação de Lembretes.
 
 ## INFORMAÇÕES GERAIS
 Imersão DTI Digital + UFMG (26/02 e 27/02)
@@ -18,15 +18,15 @@ As demais melhorias deverão ser realizadas nas próximas sprints.
 
 
 ## FUNCIONALIDADES/CARACTERÍSTICAS DO SISTEMA
-O sistema possui dois campos para preenchimento: “Nome do lembrete” e “Data”.
+O sistema possui dois campos para preenchimento: **“Nome do lembrete”** e **“Data”**.
 
-Para salvar o lembrete, deve-se clicar no botão “Criar”.
+Para salvar o lembrete, deve-se clicar no botão **“Criar”**.
 
 Há uma lista de lembretes criados, ordenados em ordem cronológica (DO mais recente PARA mais antigo).
 
 Não é possível criar lembretes em datas no passado ou em datas inválidas. Nesses casos, uma mensagem é mostrada ao usuário e o lembrete não é criado.
 
-Um lembrete existente pode ser excluído, caso o usuário clique no botão “x” ao lado do nome deste lembrete.
+Um lembrete existente pode ser excluído, caso o usuário clique no botão **“X”** ao lado do nome deste lembrete.
 
 
 ## TECNOLOGIAS UTILIZADAS
@@ -64,4 +64,4 @@ npm run build
 
 ## Contato
 
-Caso tenha alguma dúvida, sugestão ou encontre algum bug no sistema, sinta-se à vontade para nos contactar tanto no github ou através dos emails: [](), [rafaelgomes.dev@gmail.com]() e [samuelsnviana@gmail.com](mailto:samuelviana@gmail.com).
+Caso tenha alguma dúvida, sugestão ou encontre algum bug no sistema, sinta-se à vontade para nos contactar tanto no github ou através dos emails: [juliocontato@outlook.com.br](mailto:juliocontato@outlook.com.br), [rafaelgomes.dev@gmail.com](mailto:rafaelgomes@gmail.com) e [samuelsnviana@gmail.com](mailto:samuelviana@gmail.com).
