@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import moment from "moment";
-import Lembrete from "./Lembrete";
+import axios from 'axios';
 import { Button, CloseButton } from "react-bootstrap";
 import "./LembreteSistema.css";
 
@@ -13,50 +13,22 @@ class LembreteSistema extends Component{
         };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+    
+    componentDidMount() {
+        this.getLembretes();
+    }
 
-    criarLembrete = (nome, data) => {
-        const dataFormatada = data.toISOString().split('T')[0];
-        const novoLembrete = new Lembrete(nome, dataFormatada);
-
-        this.setState(prevState => {
-            const lembretes = { ...prevState.lembretes };
-            if (dataFormatada in lembretes) {
-                const lembreteExistente = lembretes[dataFormatada].find(lembrete => lembrete.nome === nome);
-                if (lembreteExistente) {
-                    return { mensagemErro: "Erro! Já existe um lembrete com este nome para a data informada!" };
-                }
-                let id = 0;
-                lembretes[dataFormatada].forEach(lembrete => {
-                    id += 1;
-                }); // incrementa o id a cada lembrete que esta na data
-                novoLembrete.addId(id);
-                lembretes[dataFormatada].push(novoLembrete);
-            } else {
-                novoLembrete.addId(0);
-                lembretes[dataFormatada] = [novoLembrete];
-            }
-            return { lembretes: lembretes };
-        });
-        
-        // }
-    };
-
-    deletaLembrete = (nome, data) => {
-        // const dataFormatada = data.toISOString().split('T')[0];
-        const dataFormatada = data;
-        this.setState(prevState => {
-            const lembretes = { ...prevState.lembretes };
-            if(dataFormatada in lembretes){
-                lembretes[dataFormatada] = lembretes[dataFormatada].filter(
-                    lembrete => lembrete.nome !== nome
-                );
-                if(lembretes[dataFormatada].length === 0){
-                    delete lembretes[dataFormatada];
-                }
-            }
-            return { lembretes };
-        });
-    };
+    deletaLembrete = async (lembreteId) => {
+        try {
+          await axios.delete(`http://localhost:5000/lembretes/${lembreteId}`);
+          this.getLembretes();
+        } catch (error) {
+          console.error("Erro ao tentar deletar o lembrete:", error);
+          const errorMessage = error.response?.data?.message || "Erro ao buscar os lembretes!";
+          this.setState({ mensagemErro: errorMessage });
+        }
+      };
+      
 
     ordenaDatas = () => {
         const lembretesOrdenados = Object.keys(this.state.lembretes).sort(
@@ -66,6 +38,17 @@ class LembreteSistema extends Component{
             data,
             lembretes: this.state.lembretes[data],
         }));
+    };
+    
+    getLembretes = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/lembretes');
+            this.setState({ lembretes: response.data['lembretes'] });
+        } catch (error) {
+            console.error("Erro ao buscar os lembretes: ", error);
+            const errorMessage = error.response?.data?.message || "Erro ao buscar os lembretes!";
+            this.setState({ mensagemErro: errorMessage });
+        }
     };
 
     validaFormulario = (nome, data) => {
@@ -88,22 +71,30 @@ class LembreteSistema extends Component{
         this.setState({ mensagemErro: "" });
         return true;
     }
-
-    handleSubmit = (event) => {
+    
+    handleSubmit = async (event) => {
         event.preventDefault();
 
         const formData = new FormData(event.target);
         const nome = formData.get('nome');
         const dataValue = formData.get('data');
-        console.log("Nome: ", nome);
-        console.log("Data value:", dataValue);
-        const data = moment(dataValue).utc();
-        const dataLocal = moment(data).local();
-        console.log("Parsed Date: ", data);
-        console.log("Local Date: ", dataLocal);
 
-        if(this.validaFormulario(nome, dataLocal)){
-            this.criarLembrete(nome, dataLocal);
+        const data = moment(dataValue).utc().local();
+
+        if(this.validaFormulario(nome, data)){
+            const dataFormatada = data.toISOString().split('T')[0];
+            try{
+                const response = await axios.post('http://localhost:5000/lembretes', {
+                    nome: nome,
+                    data: dataFormatada
+                });
+                this.setState({ mensagemErro: "" });
+                this.getLembretes();
+            }catch(error){
+                const message = error.response?.data?.message || 'Algo deu errado.';
+                console.error("Erro ao criar o lembrete: ", error);
+                this.setState({ mensagemErro: message });
+            }
         }
             
         event.target.reset();
@@ -134,7 +125,7 @@ class LembreteSistema extends Component{
                                         placeholder="Nome do lembrete"
                                         name="nome"
                                         className="nome"
-                                        // onChange={this.handleChange}
+                                        required
                                     />
                                 </label>
                             </div>
@@ -148,7 +139,7 @@ class LembreteSistema extends Component{
                                         placeholder="Data do lembrete (no formato dd/mm/aaaa)"
                                         name="data" 
                                         className="data"
-                                        // onChange={this.handleChange}
+                                        required
                                     />
                                 </label>
                             </div>
@@ -167,7 +158,7 @@ class LembreteSistema extends Component{
                                         {lembreteData.lembretes.map((lembrete, idx) => (
                                         <div className="elementoLista"> 
                                             <li key={idx} className="nomeLista">{lembrete.nome}</li>
-                                            <CloseButton className="botao_deletar" onClick={() => this.deletaLembrete(lembrete.nome, lembreteData.data)} />
+                                            <CloseButton className="botao_deletar" onClick={() => this.deletaLembrete(lembrete.id)} />
                                         </div>
                                         ))}
                                     </ul>
