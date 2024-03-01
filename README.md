@@ -48,6 +48,18 @@ O projeto utiliza as seguintes tecnologias:
 
 
 ## EXECUÇÃO
+### BACK-END:
+Rode os seguintes comandos numa janela de terminal:
+
+```
+$ cd server
+$ python3 -m venv env
+$ source env/bin/activate
+(env)$ pip install -r requirements.txt
+(env)$ flask run --debug 
+```
+
+### FRONT-END:
 1)	Abra o Prompt de Comando.
 2)  Navegue até a pasta "reminder-app" usando o comando:
 ```
@@ -55,7 +67,7 @@ cd /*caminho_para_o_diretorio*/reminder-app
 ```
 3)	Digite o comando para instalar as dependências necessárias:
 ```
-install required...
+npm install
 ```
 4)	Digite o comando para iniciar o sistema em seu navegador: 
 ```
@@ -65,12 +77,12 @@ npm start
 ```
 npm run build
 ```
-6)	Concluído!
+6)	Concluído! Navegue para [http://localhost:3000](http://localhost:3000)
 
 ## Contato
 
 Para quaisquer dúvidas, sugestões ou se você encontrar algum bug no sistema, sinta-se à vontade para nos contatar via GitHub ou através dos e-mails:
 
 - Julio: [juliocontato@outlook.com.br](mailto:juliocontato@outlook.com.br) 
-- Rafael: [rafaelgomes.dev@gmail.com](mailto:rafaelgomes@gmail.com) 
+- Rafael: [rafaelmgomes.dev@gmail.com](mailto:rafaelmgomes.dev@gmail.com) 
 - Samuel: [samuelsnviana@gmail.com](mailto:samuelviana@gmail.com)
